@@ -29,7 +29,7 @@ class cfs_apb_sequence_rw extends cfs_apb_sequence_base;
       dir  == CFS_APB_WRITE;
       addr == local::addr;
       data == wr_data;
-    });
+    })
 
   endtask
 

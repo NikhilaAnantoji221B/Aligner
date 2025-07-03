@@ -18,7 +18,7 @@ TOP_SRCS = $(RTL_DIR)/design.sv $(TB_TOP_DIR)/testbench.sv
 # # cfs_algn_md_tests_cnt_drop
 # ###########################
 # Default test if none specified
-DEFAULT_TEST = cfs_algn_apb_tests_mapped_unmapped
+DEFAULT_TEST = cfs_algn_test_random
 TESTNAME ?= $(DEFAULT_TEST)
 
 # UVM options with dynamic test name and random seed
@@ -46,7 +46,7 @@ comp:
 # Run simulation (command-line mode)
 run:
 	@echo "[Running Simulation with TESTNAME=$(TESTNAME)...]" | tee $(SIM_LOG)
-	@vsim -coverage -c -do "run -all; quit" work.testbench $(UVM_ARGS) | tee -a $(SIM_LOG) | tee -a $(TRANSCRIPT)
+	@vsim -coverage -c -voptargs=+acc -do "run -all; quit" work.testbench $(UVM_ARGS) | tee -a $(SIM_LOG) | tee -a $(TRANSCRIPT)
 
 # Launch GUI with all DUT signals preloaded
 gui:

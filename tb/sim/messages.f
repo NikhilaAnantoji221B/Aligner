@@ -7,4 +7,7 @@
 
 +uvm_set_verbosity=*,RX_FIFO,UVM_HIGH,time,0 
 +uvm_set_verbosity=*,TX_FIFO,UVM_HIGH,time,0
-+uvm_set_verbosity=*,CNT_DROP,UVM_HIGH,time,0 
++uvm_set_verbosity=*,CNT_DROP,UVM_HIGH,time,0
++uvm_set_verbosity=*,1REG_ACCESS,UVM_MEDIUM,time,0
+
++uvm_set_verbosity=*,UVM_MEDIUM,UVM_INFO
