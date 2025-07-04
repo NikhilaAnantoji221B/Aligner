@@ -21,6 +21,7 @@ package cfs_algn_test_pkg;
   `include "cfs_algn_test_reg_access.sv"
   `include "cfs_algn_test_random.sv"
 
+<<<<<<< HEAD
   `include "cfs_algn_test_clr_1write1.sv"
   `include "cfs_algn_test_1reg_access.sv"
   `include "cfs_algn_test_1fifo_lvls.sv"

@@ -35,7 +35,7 @@
         .reset(                  8'h00),
         .has_reset(              1),
         .is_rand(                1),
-        .individually_accessible(0));
+        .individually_accessible(1));
       
       RX_LVL.configure(
         .parent(                 this),
@@ -46,7 +46,7 @@
         .reset(                  4'h0),
         .has_reset(              1),
         .is_rand(                1),
-        .individually_accessible(0));
+        .individually_accessible(1));
 
       TX_LVL.configure(
         .parent(                 this),
@@ -57,7 +57,7 @@
         .reset(                  4'h0),
         .has_reset(              1),
         .is_rand(                1),
-        .individually_accessible(0));
+        .individually_accessible(1));
       
     endfunction
 
