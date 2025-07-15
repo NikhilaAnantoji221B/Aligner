@@ -51,6 +51,8 @@ class cfs_algn_test_1fifo_lvls extends cfs_algn_test_base;
     // Step 3: Manual CTRL config - offset 0 size 4 
 
     env.model.reg_block.CTRL.write(status, 32'h00000202, UVM_FRONTDOOR);
+    #(20ns);
+
     env.model.reg_block.CTRL.read(status, control_val, UVM_FRONTDOOR);
 
     `uvm_info("clr_1write1", $sformatf("CTRL register value: 0x%0h yes", control_val), UVM_MEDIUM)
@@ -71,7 +73,8 @@ class cfs_algn_test_1fifo_lvls extends cfs_algn_test_base;
 
       rx_seq40.set_sequencer(env.virtual_sequencer);
       rx_seq40.start(env.virtual_sequencer);
-      @(negedge vif.clk);
+      //    @(negedge vif.clk);
+      #(100ns);
       env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
       //   env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
 

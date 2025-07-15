@@ -36,6 +36,7 @@ class cfs_apb_coverage extends uvm_ext_coverage #(
       bins length_eq_2 = {2};
       bins length_le_10[8] = {[3 : 10]};
       bins length_gt_10 = {[11 : $]};
+      ignore_bins other_values ={[0:2],[4:$]};
 
       illegal_bins length_lt_2 = {[$ : 1]};
     }

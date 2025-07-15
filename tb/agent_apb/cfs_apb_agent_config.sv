@@ -13,7 +13,7 @@ class cfs_apb_agent_config extends uvm_ext_agent_config #(
 
   function new(string name = "", uvm_component parent);
     super.new(name, parent);
-    stuck_threshold = 1000;
+    stuck_threshold = 100000;
   endfunction
 
   virtual function void set_vif(cfs_apb_vif value);

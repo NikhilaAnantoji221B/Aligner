@@ -20,7 +20,7 @@
 
     //MD TX agent handler
     cfs_md_agent_slave#(ALGN_DATA_WIDTH) md_tx_agent;
-    
+  
     //Model handler
     cfs_algn_model model;
   

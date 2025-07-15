@@ -44,6 +44,15 @@ package cfs_algn_pkg;
   `include "../virtual_sequence/cfs_algn_virtual_sequence_rx.sv"
   `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_err.sv"
   `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_size4_offset0.sv"
+  `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_non_err.sv"
+  `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_size1_offset3.sv"
+  `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_size1_offset2.sv"
+  `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_comb.sv"
+
+
+
+  `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_size1_offset1.sv"
+
   // `include "../virtual_sequence/cfs_algn_virtual_sequence_clr_check.sv"
   //`include "../virtual_sequence/cfs_algn_virtual_sequence_clr_clear.sv"
 endpackage

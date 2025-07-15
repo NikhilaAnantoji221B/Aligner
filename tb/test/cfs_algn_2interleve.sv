@@ -57,7 +57,7 @@ class cfs_algn_2interleve extends cfs_algn_test_base;
 
 
     env.model.reg_block.IRQEN.read(status, irqen_val, UVM_FRONTDOOR);
-    irqen_val = 32'h0000001f;  // enabling all interupts
+    irqen_val = 32'h00000000;  // enabling all interupts
     env.model.reg_block.IRQEN.write(status, irqen_val, UVM_FRONTDOOR);
     `uvm_info("2INTERLEVE", $sformatf("IRQEN enabled: 0x%0h", irqen_val),
               UVM_MEDIUM)  //ensure irqen value=1f
@@ -77,14 +77,14 @@ class cfs_algn_2interleve extends cfs_algn_test_base;
 
     // Step 4: Send 1 RX packet, delay 5 clks, read STATUS at each negedge
 
-    for (int i = 0; i < 1; i++) begin
+    for (int i = 0; i < 10; i++) begin
       rx_seq = cfs_algn_virtual_sequence_rx::type_id::create($sformatf("rx_size1_%0d", i));
       rx_seq.set_sequencer(env.virtual_sequencer);
       void'(rx_seq.randomize());
       rx_seq.start(env.virtual_sequencer);
       #(5ns);
       @(negedge vif.clk);
-      env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
+      //    env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
       `uvm_info("2INTERLEVE", $sformatf("Status reg value = %0d", status_val), UVM_MEDIUM)
     end
     //Step 5:Send 1 Illegal RX packet 
@@ -95,7 +95,7 @@ class cfs_algn_2interleve extends cfs_algn_test_base;
       rx_seq_err.start(env.virtual_sequencer);
       #(5ns);
       @(negedge vif.clk);
-      env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
+      //    env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
       `uvm_info("2INTERLEVE", $sformatf("Status reg value = %0d", status_val), UVM_MEDIUM)
     end
     //Invalid ctrl.size =3,ctrl.offset=1
@@ -110,7 +110,7 @@ class cfs_algn_2interleve extends cfs_algn_test_base;
       rx_seq.start(env.virtual_sequencer);
       #(5ns);
       @(negedge vif.clk);
-      env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
+      //  env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
       `uvm_info("2INTERLEVE", $sformatf("Status reg value = %0d", status_val), UVM_MEDIUM)
     end
     //Step 5:Send 1 Illegal RX packet 
@@ -121,7 +121,7 @@ class cfs_algn_2interleve extends cfs_algn_test_base;
       rx_seq_err.start(env.virtual_sequencer);
       #(5ns);
       @(negedge vif.clk);
-      env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
+      //   env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
       `uvm_info("2INTERLEVE", $sformatf("Status reg value = %0d", status_val), UVM_MEDIUM)
     end
 

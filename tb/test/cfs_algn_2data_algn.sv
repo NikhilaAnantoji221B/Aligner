@@ -18,8 +18,9 @@ class cfs_algn_2data_algn extends cfs_algn_test_base;
 
     cfs_algn_virtual_sequence_reg_config cfg_seq;
 
-    cfs_algn_virtual_sequence_rx rx_seq;
+    cfs_algn_virtual_sequence_rx_non_err rx_seq;
 
+    cfs_algn_virtual_sequence_rx_size1_offset3 rx_seq_s13;
     // cfs_md_sequence_tx_ready_block tx_block_seq;
 
     cfs_algn_vif vif;
@@ -58,7 +59,7 @@ class cfs_algn_2data_algn extends cfs_algn_test_base;
 
 
     env.model.reg_block.IRQEN.read(status, irqen_val, UVM_FRONTDOOR);
-    irqen_val = 32'h00000000;  // enabling all interupts
+    irqen_val = 32'h0000001f;  // enabling all interupts
     env.model.reg_block.IRQEN.write(status, irqen_val, UVM_FRONTDOOR);
     `uvm_info("1FIFO_LVLS", $sformatf("IRQEN disabled: 0x%0h", irqen_val),
               UVM_MEDIUM)  //ensure irqen value=1f
@@ -78,22 +79,32 @@ class cfs_algn_2data_algn extends cfs_algn_test_base;
 
     // Step 4: Send 8 RX packets with SIZE=1 and OFFSET=0, delay 5 clks, read STATUS at each negedge
 
-    for (int i = 0; i < 2; i++) begin
-      rx_seq = cfs_algn_virtual_sequence_rx::type_id::create($sformatf("rx_size1_%0d", i));
+    for (int i = 0; i < 30; i++) begin
+      rx_seq = cfs_algn_virtual_sequence_rx_non_err::type_id::create($sformatf("rx_size1_%0d", i));
       rx_seq.set_sequencer(env.virtual_sequencer);
       void'(rx_seq.randomize());
       rx_seq.start(env.virtual_sequencer);
 
-      #(5ns);
-      @(negedge vif.clk);
+      #(50ns);
 
-      env.model.reg_block.STATUS.RX_LVL.read(status, status_val, UVM_FRONTDOOR);
+
+      //   @(negedge vif.clk);
+
+      // env.model.reg_block.STATUS.RX_LVL.read(status, status_val, UVM_FRONTDOOR);
 
       //   env.model.reg_block.STATUS.TX_LVL.read(status, tx_lvl, UVM_FRONTDOOR);
 
-      `uvm_info("2data_algn", $sformatf("RX_LVL = %0d", status_val), UVM_MEDIUM)
+      // `uvm_info("2data_algn", $sformatf("RX_LVL = %0d", status_val), UVM_MEDIUM)
 
     end
+    rx_seq_s13 =
+        cfs_algn_virtual_sequence_rx_size1_offset3::type_id::create($sformatf("rx_size1_offset3"));
+    $display(
+        "----------------------------------------sending illegal packet-----------------------------------------");
+    rx_seq_s13.set_sequencer(env.virtual_sequencer);
+    void'(rx_seq_s13.randomize());
+    rx_seq_s13.start(env.virtual_sequencer);
+
 
     #(200ns);
 

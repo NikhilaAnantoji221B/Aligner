@@ -21,14 +21,20 @@ package cfs_algn_test_pkg;
   `include "cfs_algn_test_reg_access.sv"
   `include "cfs_algn_test_random.sv"
 
-<<<<<<< HEAD
   `include "cfs_algn_test_clr_1write1.sv"
   `include "cfs_algn_test_1reg_access.sv"
   `include "cfs_algn_test_1fifo_lvls.sv"
   `include "cfs_algn_2data_algn.sv"
   `include "cfs_algn_2interleve.sv"
   `include "cfs_algn_intr_test.sv"
-
+  `include "cfs_algn_2back_pressure.sv"
+  `include "cfs_algn_2back_pressure_control.sv"
+  `include "cfs_algn_test_4reset_behaviour.sv"
+  `include "cfs_algn_test_4reset_during_apb_access.sv"
+  `include "cfs_algn_test_4clk_stall_behaviour.sv"
+  `include "cfs_algn_3multiple_interrupt_test.sv"
+  `include "cfs_algn_ctrl_size3_hit_test.sv"
+  `include "cfs_algn_test_size_offset_cross_reset.sv"
   //manual apb tests included below
   `include "../test/apb_tests/cfs_algn_apb_tests_mapped_unmapped.sv"
 

@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // File:        cfs_algn_model.sv
 // Author:      Cristian Florin Slav
 // Date:        2024-06-19
@@ -81,6 +81,8 @@ class cfs_algn_model extends uvm_component implements uvm_ext_reset_handler;
 
   //Pointer to the process from inside function set_tx_fifo_full()
   local process process_set_tx_fifo_full;
+
+  int count = 0;
 
 
   `uvm_component_utils(cfs_algn_model)
@@ -392,6 +394,10 @@ class cfs_algn_model extends uvm_component implements uvm_ext_reset_handler;
 
   //Function to increment STATUS.RX_LVL whenever new data is pushed in RX FIFO
   protected virtual function void inc_rx_lvl();
+    count++;
+    $display(
+        "-------------------------------------------------COUNT=%d--------------------------------------------------",
+        count);
     void'(reg_block.STATUS.RX_LVL.predict(reg_block.STATUS.RX_LVL.get_mirrored_value() + 1));
 
     if (reg_block.STATUS.RX_LVL.get_mirrored_value() == rx_fifo.size()) begin
@@ -768,6 +774,22 @@ class cfs_algn_model extends uvm_component implements uvm_ext_reset_handler;
 
               if (tx_item.data.size() == ctrl_size) begin
                 tx_item.end_tr(buffer_item.get_end_time());
+                begin
+                  cfs_algn_split_info info = cfs_algn_split_info::type_id::create("info", this);
+
+                  info.ctrl_offset      = ctrl_offset;
+                  info.ctrl_size        = ctrl_size;
+                  info.md_offset        = tx_item.offset;
+                  info.md_size          = tx_item.data.size();
+                  info.num_bytes_needed = 0;
+
+                  port_out_split_info.write(info);
+                  `uvm_info("MODEL", $sformatf(
+                            " --------------------------------PACKETS RECEIVED IN MODEL MD_OFFSET=%0d,MD_SIZE=%0d-----------------",
+                            info.md_offset,
+                            info.md_size
+                            ), UVM_LOW)
+                end
 
                 push_to_tx_fifo(tx_item);
               end
@@ -790,6 +812,11 @@ class cfs_algn_model extends uvm_component implements uvm_ext_reset_handler;
                 info.num_bytes_needed = num_bytes_needed;
 
                 port_out_split_info.write(info);
+                `uvm_info("MODEL", $sformatf(
+                          " --------------------------------PACKETS RECEIVED IN MODEL MD_OFFSET=%0d,MD_SIZE=%0d-----------------",
+                          info.md_offset,
+                          info.md_size
+                          ), UVM_LOW)
               end
             end
           end

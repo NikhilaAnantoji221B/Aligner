@@ -23,7 +23,7 @@ class cfs_algn_coverage extends uvm_component implements uvm_ext_reset_handler;
     }
 
     ctrl_size: coverpoint info.ctrl_size {
-      option.comment = "Value of CTRL.SIZE"; bins values[] = {[1 : 4]};
+      option.comment = "Value of CTRL.SIZE"; bins values[] = {[1 : 2], 4};
     }
 
     md_offset: coverpoint info.md_offset {
@@ -39,7 +39,88 @@ class cfs_algn_coverage extends uvm_component implements uvm_ext_reset_handler;
     }
 
     all : cross ctrl_offset, ctrl_size, md_offset, md_size, num_bytes_needed{
-      ignore_bins ignore_ctrl = (binsof(ctrl_offset) intersect {0} && binsof(ctrl_size) intersect {
+      ignore_bins ignore_ctrl_0 = binsof(ctrl_offset) intersect {0} && binsof(ctrl_size) intersect {
+        3
+      };
+      ignore_bins ignore_ctrl_1 = binsof(ctrl_offset) intersect {1} && binsof(ctrl_size) intersect {
+        2, 3, 4
+      };
+      ignore_bins ignore_ctrl_2 = binsof(ctrl_offset) intersect {2} && binsof(ctrl_size) intersect {
+        3, 4
+      };
+      ignore_bins ignore_ctrl_3 = binsof(ctrl_offset) intersect {3} && binsof(ctrl_size) intersect {
+        2, 3, 4
+      };
+
+      ignore_bins ignore_md_0 = binsof (md_offset) intersect {0} && binsof (md_size) intersect {3};
+      ignore_bins ignore_md_1 = binsof (md_offset) intersect {1} && binsof (md_size) intersect {
+        2, 3, 4
+      };
+      ignore_bins ignore_md_2 = binsof (md_offset) intersect {2} && binsof (md_size) intersect {
+        3, 4
+      };
+      ignore_bins ignore_md_3 = binsof (md_offset) intersect {3} && binsof (md_size) intersect {
+        2, 3, 4
+      };
+
+
+      ignore_bins new_ignore_ctrl_invalid_pairs =
+        (binsof(ctrl_size) intersect {2} && binsof(ctrl_offset) intersect {
+        1, 3
+      }) || (binsof (ctrl_size) intersect {4} && binsof (ctrl_offset) intersect {
+        1, 2, 3
+      });
+
+      // NEW ignore bins based on invalid num_bytes for (size, offset) pairs for ctrl
+      ignore_bins new_ignore_md_invalid_pairs =
+        (binsof(md_size) intersect {2} && binsof(md_offset) intersect {
+        1, 3
+      }) || (binsof (md_size) intersect {4} && binsof (md_offset) intersect {
+        1, 2, 3
+      });
+      ignore_bins illegal_num_bytes_needed_gt_ctrl_size = 
+        binsof(ctrl_size) intersect {2} &&binsof(num_bytes_needed) intersect {
+        3
+      };
+
+
+      ignore_bins illegal_ctrl_size_1_num_bytes_needed_3 = 
+        binsof(ctrl_size) intersect {1} && binsof(num_bytes_needed) intersect {
+        3
+      };
+
+
+      ignore_bins illegal_ctrl_size_1_num_bytes_needed_2 = 
+       binsof(ctrl_size) intersect {1} && binsof(num_bytes_needed) intersect {2} ||
+       binsof(ctrl_size) intersect {4} && binsof(md_size) intersect {2} && binsof(md_offset) intersect {0}||
+       binsof(num_bytes_needed) intersect {2,3} &&  binsof(md_size) intersect {2} ||
+       binsof(num_bytes_needed) intersect {2,3} &&   binsof(md_offset) intersect {2} ||
+       binsof(md_size) intersect {1,3} || binsof(md_offset) intersect {
+        1, 3
+      };
+
+      //ignore_bins for num_bytes_needed value 1 for ctrl_size=2 and ctrl_offset=2
+      ignore_bins illegal_num_bytes_needed_1=
+        binsof(ctrl_size) intersect {2} && binsof(ctrl_offset) intersect {2} && binsof(md_offset)intersect{
+        0} && binsof(num_bytes_needed) intersect{1} && binsof(md_size) intersect{
+        2
+      };
+
+      ignore_bins illegal_num_bytes_needed_1_ctrl=
+          binsof(ctrl_size) intersect {2} && binsof(ctrl_offset) intersect {2} && binsof(num_bytes_needed) intersect{
+        1
+      };
+    }
+
+
+
+
+
+
+
+  /*all : cross ctrl_offset, ctrl_size, md_offset, md_size, num_bytes_needed{
+      ignore_bins ignore_ctrl =
+       (binsof(ctrl_offset) intersect {0} && binsof(ctrl_size) intersect {
         3
       }) || (binsof (ctrl_offset) intersect {1} && binsof (ctrl_size) intersect {
         2, 3, 4
@@ -47,9 +128,9 @@ class cfs_algn_coverage extends uvm_component implements uvm_ext_reset_handler;
         3, 4
       }) || (binsof (ctrl_offset) intersect {3} && binsof (ctrl_size) intersect {
         2, 3, 4
-      });
+  });
     //TODO: other combinations should be ignored from this cross
-    }
+    }*/
 
   endgroup
 
@@ -67,6 +148,19 @@ class cfs_algn_coverage extends uvm_component implements uvm_ext_reset_handler;
 
   virtual function void write_in_split_info(cfs_algn_split_info info);
     cover_split.sample(info);
+    `uvm_info("SPLIT_INFO", $sformatf(
+              "-------------------------------Sampled: size=%0d, offset=%0d--------------------------------------",
+              info.md_size,
+              info.md_offset
+              ), UVM_LOW)
+    // Add assert to catch the event
+    if (info.md_size == 1 && info.md_offset == 3) begin
+      `uvm_info("MD_TARGET_HIT",
+                "------------------md_size=1 and md_offset=3 was observed!---------------------",
+                UVM_NONE)
+    end
+
+
   endfunction
 
   virtual function void handle_reset(uvm_phase phase);

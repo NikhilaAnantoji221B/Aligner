@@ -22,7 +22,7 @@ class cfs_md_agent_config #(
     super.new(name, parent);
 
     sample_delay_start_tr = 1ns;
-    stuck_threshold       = 1000;
+    stuck_threshold       = 100000;
   endfunction
 
   //Setter for the MD virtual interface

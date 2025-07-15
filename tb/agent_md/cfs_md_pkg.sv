@@ -50,7 +50,9 @@ package cfs_md_pkg;
   `include "../sequence/cfs_md_sequence_simple_slave.sv"
   `include "../sequence/cfs_md_sequence_slave_response.sv"
   `include "../sequence/cfs_md_sequence_slave_response_forever.sv"
-  `include "../sequence/cfs_md_sequence_tx_ready_block.sv"
+  `include "../sequence/cfs_md_sequence_md_tx_ready_block.sv"
+  `include "../sequence/cfs_md_sequence_fixed_delay.sv"
+  `include "../sequence/cfs_md_sequence_length_4.sv"
 
 endpackage
 
