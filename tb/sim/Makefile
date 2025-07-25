@@ -12,6 +12,8 @@ DEFAULT_TEST = cfs_algn_apb_tests_mapped_unmapped
 TESTNAME ?= $(DEFAULT_TEST)
 SEED ?= random
 
+TOGGLE_DO=../../tb/sim/toggle_exclude.do
+
 # UVM arguments
 UVM_ARGS = +UVM_TESTNAME=$(TESTNAME) +UVM_MAX_QUIT_COUNT=1 +access +rw +ntb_random_seed=$(SEED) -f messages.f
 
@@ -43,13 +45,13 @@ run:
 	@mkdir -p $(UCDB_DIR)
 	@echo "[Running Simulation: TEST=$(TESTNAME), SEED=$(SEED)]" | tee $(SIM_LOG)
 	@vsim -coverage -c work.testbench $(UVM_ARGS) \
-		-do "coverage save -onexit $(UCDB_FILE); run -all; quit" \
+		-do  "do $(TOGGLE_DO); coverage save -onexit $(UCDB_FILE); run -all; quit" \
 		| tee -a $(SIM_LOG) | tee -a $(TRANSCRIPT)
 
 # Run simulation (GUI)
 grun:
 	@echo "[Running Simulation with TESTNAME=$(TESTNAME) in GUI mode...]" | tee $(SIM_LOG)
-	@vsim -coverage work.testbench $(UVM_ARGS) -do "do wave.do; run -all; quit" | tee -a $(SIM_LOG) | tee -a $(TRANSCRIPT)
+	@vsim -coverage work.testbench $(UVM_ARGS) -do "do $(TOGGLE_DO);do wave.do; run -all; quit" | tee -a $(SIM_LOG) | tee -a $(TRANSCRIPT)
 
 # Clean all
 clean:
@@ -68,7 +70,7 @@ report:
 # Regression run
 NUM_RUNS ?= 1
 
-regress:
+regress: comp
 	@echo "[Starting Full Regression: $(NUM_RUNS) runs per test]" | tee regression.log
 	@rm -rf logs ucdb
 	@mkdir -p logs ucdb
@@ -81,7 +83,7 @@ regress:
 			echo "[Running $$test with SEED=$$seed]" | tee -a regression.log ; \
 			vsim -coverage -c work.testbench \
 				+UVM_TESTNAME=$$test +UVM_MAX_QUIT_COUNT=1 +access +rw +ntb_random_seed=$$seed -f messages.f \
-				-do "coverage save -onexit ucdb/$$test\_$$runid.ucdb; run -all; quit;" \
+				-do "do $(TOGGLE_DO);coverage save -onexit ucdb/$$test\_$$runid.ucdb; run -all; quit;" \
 				> logs/$$test\_$$runid.log 2>&1 ; \
 			grep -i -P "UVM_FATAL(?! *: *0)|UVM_ERROR(?! *: *0)|(\*UVM_FATAL)|(\*Error[^s:])|^#\s+Fatal" logs/$$test\_$$runid.log \
 				&& echo "[❌ FAIL] $$test (SEED=$$seed)" | tee -a regression.log \

@@ -1,3 +1,4 @@
+//Valid RX data sequence
 `ifndef CFS_ALGN_VIRTUAL_SEQUENCE_RX_NON_ERR_SV
 `define CFS_ALGN_VIRTUAL_SEQUENCE_RX_NON_ERR_SV
 

@@ -35,6 +35,15 @@ package cfs_algn_test_pkg;
   `include "cfs_algn_3multiple_interrupt_test.sv"
   `include "cfs_algn_ctrl_size3_hit_test.sv"
   `include "cfs_algn_test_size_offset_cross_reset.sv"
+  `include "cfs_algn_aligned_bytes_processed2_hit_test.sv"
+  `include "cfs_algn_test_size_offset_cross_reset_rand.sv"
+  `include "cfs_algn_test_max_drp.sv"
+  `include "cfs_algn_intr_enable0.sv"
+  `include "cfs_algn_txempty_trigger.sv"
+  `include "cfs_algn_txempty_trigger2.sv"
+  `include "cfs_algn_ctrl_hit_test.sv"
+  `include "cfs_algn_ctrl_hit_test2.sv"
+
   //manual apb tests included below
   `include "../test/apb_tests/cfs_algn_apb_tests_mapped_unmapped.sv"
 
