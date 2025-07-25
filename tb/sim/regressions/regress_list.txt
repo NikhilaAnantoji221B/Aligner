@@ -1,3 +1,4 @@
+cfs_algn_txempty_trigger2
 cfs_algn_ctrl_size3_hit_test
 cfs_algn_test_base
 cfs_algn_apb_tests_mapped_unmapped
@@ -16,3 +17,12 @@ cfs_algn_test_4reset_behaviour
 cfs_algn_test_4clk_stall_behaviour
 cfs_algn_test_4reset_during_apb_access
 cfs_algn_test_size_offset_cross_reset
+cfs_algn_aligned_bytes_processed2_hit_test
+cfs_algn_test_max_drp
+cfs_algn_intr_enable0
+cfs_algn_ctrl_hit_test
+cfs_algn_ctrl_hit_test2
+cfs_algn_test_size_offset_cross_reset_rand
+cfs_algn_test_clr_1write1
+cfs_algn_test_random
+cfs_algn_test_reg_access

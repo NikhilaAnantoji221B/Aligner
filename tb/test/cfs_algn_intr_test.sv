@@ -1,8 +1,9 @@
+//Test to trigger rx fifo and tx fifo full and empty conditions
 `ifndef CFS_ALGN_INTR_TEST_SV
 `define CFS_ALGN_INTR_TEST_SV
+
 class cfs_algn_intr_test extends cfs_algn_test_base;
   `uvm_component_utils(cfs_algn_intr_test)
-
   function new(string name = "", uvm_component parent = null);
     super.new(name, parent);
   endfunction
@@ -24,9 +25,7 @@ class cfs_algn_intr_test extends cfs_algn_test_base;
 
     #(100ns);
 
-
-    // Step 0: Fork SLAVE_RESPONSE_FOREVER
-
+    //SLAVE_RESPONSE_FOREVER
     fork
       begin
         resp_seq = cfs_md_sequence_slave_response_forever::type_id::create("resp_seq");
@@ -34,7 +33,7 @@ class cfs_algn_intr_test extends cfs_algn_test_base;
       end
     join_none
 
-    //1. Register config
+    //Register config
     cfg_seq = cfs_algn_virtual_sequence_reg_config::type_id::create("cfg_seq");
     cfg_seq.set_sequencer(env.virtual_sequencer);
     cfg_seq.start(env.virtual_sequencer);
@@ -46,64 +45,23 @@ class cfs_algn_intr_test extends cfs_algn_test_base;
     `uvm_info("1FIFO_LVLS", $sformatf("IRQEN updated: 0x%0h", irqen_val),
               UVM_MEDIUM)  //ensure irqen value=1f
 
-    // Step 3: Manual CTRL config - offset 0 size 4 
-
+    //Manual CTRL config - offset 0 size 1 
     env.model.reg_block.CTRL.write(status, 32'h00000001, UVM_FRONTDOOR);
     env.model.reg_block.CTRL.read(status, control_val, UVM_FRONTDOOR);
-
     `uvm_info("clr_1write1", $sformatf("CTRL register value: 0x%0h yes", control_val), UVM_MEDIUM)
-
 
     vif = env.env_config.get_vif();
 
     repeat (50) @(posedge vif.clk);
-
-    // Step 4: Send 2 RX packets 
-
-    /* for (int i = 0; i < 2; i++) begin
-      rx_err_seq = cfs_algn_virtual_sequence_rx_err::type_id::create($sformatf("rx_size1_%0d", i));
-      rx_err_seq.set_sequencer(env.virtual_sequencer);
-      void'(rx_err_seq.randomize());
-      rx_err_seq.start(env.virtual_sequencer);
-      @(negedge vif.clk);
-      env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
-      //   env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
-    end
-
-
-    env.model.reg_block.IRQ.read(status, irq_val, UVM_FRONTDOOR);
-
-    for (int i = 0; i < 1; i++) begin
-      rx_err_seq = cfs_algn_virtual_sequence_rx_err::type_id::create($sformatf("rx_size1_%0d", i));
-      rx_err_seq.set_sequencer(env.virtual_sequencer);
-      void'(rx_err_seq.randomize());
-      rx_err_seq.start(env.virtual_sequencer);
-      @(negedge vif.clk);
-
-      #(20ns);
-      env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
-
-      env.model.reg_block.IRQ.read(status, irq_val, UVM_FRONTDOOR);
-    end*/
-
-
+    //Send valid rx data with size 4 and offset 0
     for (int i = 0; i < 50; i++) begin
       rx_seq40 =
           cfs_algn_virtual_sequence_rx_size4_offset0::type_id::create($sformatf("rx_size1_%0d", i));
       rx_seq40.set_sequencer(env.virtual_sequencer);
       void'(rx_seq40.randomize());
       rx_seq40.start(env.virtual_sequencer);
-      //@(negedge vif.clk);
-
-      //    env.model.reg_block.STATUS.read(status, status_val, UVM_FRONTDOOR);
-
-      //      env.model.reg_block.IRQ.read(status, irq_val, UVM_FRONTDOOR);
     end
 
-
-
-
-    //  `uvm_info("1WRITE1", $sformatf("IRQEN updated: 0x%0h", cnt_val[7:0]),UVM_MEDIUM)  //ensure irqen_val[4]=1
     #(200ns);
 
     phase.drop_objection(this, "TEST_DONE");

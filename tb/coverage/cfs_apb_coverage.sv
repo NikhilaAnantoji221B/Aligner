@@ -36,7 +36,7 @@ class cfs_apb_coverage extends uvm_ext_coverage #(
       bins length_eq_2 = {2};
       bins length_le_10[8] = {[3 : 10]};
       bins length_gt_10 = {[11 : $]};
-      ignore_bins other_values ={[0:2],[4:$]};
+      ignore_bins other_values = {[0 : 2], [4 : $]};
 
       illegal_bins length_lt_2 = {[$ : 1]};
     }
@@ -63,6 +63,19 @@ class cfs_apb_coverage extends uvm_ext_coverage #(
     access_ongoing: coverpoint psel {option.comment = "An APB access was ongoing at reset";}
   endgroup
 
+  //Coverage bins for interupts
+
+  covergroup cover_interrupts with function sample (bit [15:0] rd_data);
+    option.per_instance = 1;
+
+    irq_max_drop: coverpoint rd_data[4] {option.comment = "MAX_DROP interrupt";}
+    irq_tx_fifo_full: coverpoint rd_data[3] {option.comment = "TX_FIFO_FULL interrupt";}
+    irq_tx_fifo_empty: coverpoint rd_data[2] {option.comment = "TX_FIFO_EMPTY interrupt";}
+    irq_rx_fifo_full: coverpoint rd_data[1] {option.comment = "RX_FIFO_FULL interrupt";}
+    irq_rx_fifo_empty: coverpoint rd_data[0] {option.comment = "RX_FIFO_EMPTY interrupt";}
+  //  irq_combination_cp : cross RX_FIFO_EMPTY_cp, RX_FIFO_FULL_cp, TX_FIFO_EMPTY_cp, TX_FIFO_FULL_cp, MAX_DROP_cp;
+  endgroup
+
   function new(string name = "", uvm_component parent);
     super.new(name, parent);
 
@@ -71,7 +84,12 @@ class cfs_apb_coverage extends uvm_ext_coverage #(
 
     cover_reset = new();
     cover_reset.set_inst_name($sformatf("%s_%s", get_full_name(), "cover_reset"));
+
+    cover_interrupts = new();
+    cover_interrupts.set_inst_name($sformatf("%s_%s", get_full_name(), "cover_interrupts"));
   endfunction
+
+
 
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
@@ -102,6 +120,9 @@ class cfs_apb_coverage extends uvm_ext_coverage #(
 
   virtual function void write_item(cfs_apb_item_mon item);
     cover_item.sample(item);
+
+    if (item.addr == 16'h00F4 && item.dir == CFS_APB_READ) cover_interrupts.sample(item.data[15:0]);
+
 
     for (int i = 0; i < `CFS_APB_MAX_ADDR_WIDTH; i++) begin
       if (item.addr[i]) begin

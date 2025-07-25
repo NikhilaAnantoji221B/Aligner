@@ -32,7 +32,6 @@ class cfs_algn_test_random extends cfs_algn_test_base;
         cfs_md_sequence_slave_response_forever seq = cfs_md_sequence_slave_response_forever::type_id::create(
             "seq"
         );
-
         seq.start(env.md_tx_agent.sequencer);
       end
     join_none
@@ -42,19 +41,14 @@ class cfs_algn_test_random extends cfs_algn_test_base;
         cfs_algn_virtual_sequence_reg_config seq = cfs_algn_virtual_sequence_reg_config::type_id::create(
             "seq"
         );
-
         void'(seq.randomize());
-
         seq.start(env.virtual_sequencer);
       end
 
       repeat (num_md_rx_transactions) begin
         cfs_algn_virtual_sequence_rx seq = cfs_algn_virtual_sequence_rx::type_id::create("seq");
-
         seq.set_sequencer(env.virtual_sequencer);
-
         void'(seq.randomize());
-
         seq.start(env.virtual_sequencer);
       end
 
@@ -70,9 +64,7 @@ class cfs_algn_test_random extends cfs_algn_test_base;
         cfs_algn_virtual_sequence_reg_status seq = cfs_algn_virtual_sequence_reg_status::type_id::create(
             "seq"
         );
-
         void'(seq.randomize());
-
         seq.start(env.virtual_sequencer);
       end
     end

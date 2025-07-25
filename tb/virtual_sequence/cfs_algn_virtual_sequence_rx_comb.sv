@@ -1,3 +1,4 @@
+//Sequence to send all valid combinations of RX Data
 `ifndef CFS_ALGN_VIRTUAL_SEQUENCE_RX_COMB_SV
 `define CFS_ALGN_VIRTUAL_SEQUENCE_RX_COMB_SV
 

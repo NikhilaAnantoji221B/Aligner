@@ -1,3 +1,4 @@
+//Test to hit all possible valid combinations of md and ctrl, size and offset
 `ifndef CFS_ALGN_TEST_SIZE_OFFSET_CROSS_RESET_SV
 `define CFS_ALGN_TEST_SIZE_OFFSET_CROSS_RESET_SV
 
@@ -55,7 +56,6 @@ class cfs_algn_test_size_offset_cross_reset extends cfs_algn_test_base;
     join_none
 
     //#(10ns);
-
     // Do initial register config
     reg_cfg = cfs_algn_virtual_sequence_reg_config::type_id::create("reg_cfg");
     void'(reg_cfg.randomize());
@@ -63,7 +63,6 @@ class cfs_algn_test_size_offset_cross_reset extends cfs_algn_test_base;
     reg_cfg.start(env.virtual_sequencer);
 
     foreach (ctrl_val_list[i]) begin
-
       // --- Assert Reset ---
       repeat (2) @(posedge vif_algn.clk);
       `uvm_info("CTRL_INFO", $sformatf(

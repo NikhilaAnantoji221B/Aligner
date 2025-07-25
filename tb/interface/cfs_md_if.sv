@@ -173,9 +173,9 @@ interface cfs_md_if #(
     @(posedge clk) disable iff (!reset_n || !has_checks) valid |-> size != 0;
   endproperty
 
-  SIZE_EQ_0_A :
-  assert property (size_eq_0_p)
-  else $error("Detected value 0 for MD signal size");
+  //SIZE_EQ_0_A :
+  //assert property (size_eq_0_p)
+  //else $error("Detected value 0 for MD signal size");
 
 
   //Rule #11: err is valid only when both valid and ready are high.

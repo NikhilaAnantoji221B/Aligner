@@ -48,10 +48,12 @@ package cfs_algn_pkg;
   `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_size1_offset3.sv"
   `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_size1_offset2.sv"
   `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_comb.sv"
+  `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_size1_offset0.sv"
 
 
 
   `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_size1_offset1.sv"
+  `include "../virtual_sequence/cfs_algn_virtual_sequence_rx_rand_comb.sv"
 
   // `include "../virtual_sequence/cfs_algn_virtual_sequence_clr_check.sv"
   //`include "../virtual_sequence/cfs_algn_virtual_sequence_clr_clear.sv"
